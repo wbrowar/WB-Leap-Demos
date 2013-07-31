@@ -8,25 +8,41 @@ var currentColor_s = 50;
 var currentColor_l = 50;
 
 
+// Change "output" text
+function output_log(new_text) {
+	jq('#output').text(new_text);
+}
+
 // Get direction of "swipe" Gesture
 function findSwipeDirection(x, y, z) {
 	var direction = '_none';
 	var x_abs = Math.abs(x);
 	var y_abs = Math.abs(y);
+	var z_abs = Math.abs(z);
 	
-	if (x_abs > y_abs) {
+	// check if z is larger than both x and y
+	if (z_abs > x_abs && z_abs > y_abs) {
 		// check for left
-		if (x < 0) {
-			direction = 'left';
-		} else if (x > 0) {
-			direction = 'right';
+		if (z < 0) {
+			direction = 'out';
+		} else if (z > 0) {
+			direction = 'in';
 		}
 	} else {
-		// check for up/down
-		if (y > 0) {
-			direction = 'up';
-		} else if (y < 0) {
-			direction = 'down';
+		if (x_abs > y_abs) {
+			// check for left
+			if (x < 0) {
+				direction = 'left';
+			} else if (x > 0) {
+				direction = 'right';
+			}
+		} else {
+			// check for up/down
+			if (y > 0) {
+				direction = 'up';
+			} else if (y < 0) {
+				direction = 'down';
+			}
 		}
 	}
 	
@@ -71,6 +87,14 @@ function updateCurrentColor(selector, x, y, z) {
 	
 	var currentColor_hsl = 'hsl('+currentColor_h+','+currentColor_s+'%,'+currentColor_l+'%)';
 	jq(selector).css('background-color', currentColor_hsl);
+	output_log('New Color: '+currentColor_hsl);
+	
+	// change menu text to dark mode when background is too light
+	if (currentColor_l > 70) {
+		jq('body').addClass('dark_mode');
+	} else {
+		jq('body').removeClass('dark_mode');
+	}
 }
 
 // Animate color_bg – slide
@@ -91,9 +115,15 @@ function animateColorBGSlide(gesture_direction) {
 			jq('#color_bg_slider').addClass('slide_anim_right');
 			break;
 	}
+	output_log('Swipe: '+gesture_direction);
 }
 function updateColorBGColor() {
-	jq('#color_bg_slider').removeClass('is_animated').removeClass('slide_anim_up').removeClass('slide_anim_down').removeClass('slide_anim_left').removeClass('slide_anim_right');
+	jq('#color_bg_slider')
+	.removeClass('is_animated')
+	.removeClass('slide_anim_up')
+	.removeClass('slide_anim_down')
+	.removeClass('slide_anim_left')
+	.removeClass('slide_anim_right');
 	
 	// clone then remove content
 	var el     = jq('#color_bg_slider'),  
@@ -102,6 +132,47 @@ function updateColorBGColor() {
   jq("#color_bg_slider:last").remove();
   
 	jq('#color_bg_slider').css('background-color', jq('#color_bg_static').css('background-color'));
+}
+
+
+function setupUserInteractions() {
+	// show features enabled on start
+	if (currentColor_enabled === 1) {
+		jq('#toggle_current_color').addClass('feature_enabled');
+	}
+	if (colorBGSlider_enabled === 1) {
+		jq('#toggle_color_bg_slider').addClass('feature_enabled');
+	}
+	
+	// toggle features
+	jq('.toggle_feature').click(function () {
+		var current_id = jq(this).attr('id');
+		
+		switch(current_id) {
+			case 'toggle_current_color':
+				if (currentColor_enabled === 0) {
+					currentColor_enabled = 1;
+					jq(this).addClass('feature_enabled');
+				} else {
+					currentColor_enabled = 0;
+					jq(this).removeClass('feature_enabled');
+				}
+				break;
+			case 'toggle_color_bg_slider':
+				if (colorBGSlider_enabled === 0) {
+					colorBGSlider_enabled = 1;
+					jq(this).addClass('feature_enabled');
+				} else {
+					colorBGSlider_enabled = 0;
+					jq(this).removeClass('feature_enabled');
+				}
+				break;
+			case 'toggle_current_hue':
+				break;
+		}
+		
+		return false;
+	});
 }
 
 // Create a listener that will print frame data when a new frame arrives
@@ -163,6 +234,8 @@ jq(window).load(function() {
   if (currentColor_enabled === 1) {
 		updateCurrentColor('#color_bg_static', 0, 0, 0);
 	}
+	
+	setupUserInteractions();
 });
 
 

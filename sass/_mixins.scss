@@ -23,27 +23,15 @@ $color_blue_default: rgb(157, 184, 181);
 	$font_weight: normal !default;
 	$font_style: normal !default;
 	
-	@if $font_name == 'museo_300' {
-		$font_family: 'museo-sans', Arial, Verdana, sans-serif;
-		$font_weight: 300;
+	@if $font_name == 'avenir' {
+		$font_family: Avenir Next, Helvetica, Helvetica Neue, Arial;
 	}
-	@else if $font_name == 'museo_300_italic' {
-		$font_family: 'museo-sans', Arial, Verdana, sans-serif;
-		$font_weight: 300;
-		$font_style: italic;
+	@else if $font_name == 'avenir_bold' {
+		$font_family: Avenir Next, Helvetica, Helvetica Neue, Arial;
+		$font_weight: 700;
 	}
-	@else if $font_name == 'museo_500' {
-		$font_family: 'museo-sans', Arial, Verdana, sans-serif;
-		$font_weight: 500;
-	}
-	@else if $font_name == 'museo_500_italic' {
-		$font_family: 'museo-sans', Arial, Verdana, sans-serif;
-		$font_weight: 500;
-		$font_style: italic;
-	}
-	@else if $font_name == 'futura_book' {
-		$font_family: 'futura-pt', 'museo-sans', Arial, Verdana, sans-serif;
-		$font_weight: 400;
+	@else if $font_name == 'avenir_condensed' {
+		$font_family: Avenir Next Condensed, Helvetica, Helvetica Neue, Arial;
 	}
 	
 	font: {

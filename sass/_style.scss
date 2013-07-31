@@ -8,9 +8,9 @@ img {
 }
 
 html {
-	@include font('museo_300');
+	@include font('avenir');
 	font-size: 100%;
-	line-height: 1.4;
+	line-height: 1.5;
 	color: $color_brown_default;
 }
 
@@ -55,12 +55,40 @@ html {
 #color_bg_slider {
 	z-index: 100;
 }
+section {
+	position: relative;
+	z-index: 1000;
+}
 .output-container {
+	padding: .2% .8%;
 	position: absolute;
 	right: 0;
 	bottom: 0;
+	@include box_sizing_default;
 	text-align: right;
-	z-index: 1000;
+}
+#nav {
+	padding: 2%;
+	@include box_sizing_default;
+	
+	a {
+		display: block;
+		text-decoration: none;
+		@include font('avenir_bold');
+		font-size: 3em;
+		color: transparentize($color_white_default, .6);
+		
+		&.feature_enabled {
+			color: $color_white_default;
+		}
+		.dark_mode & {
+			color: transparentize($color_black_default, .6);
+		
+			&.feature_enabled {
+				color: $color_black_default;
+			}
+		}
+	}
 }
 
 
