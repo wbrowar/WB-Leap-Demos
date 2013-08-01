@@ -1,6 +1,9 @@
 // testing variables
 var jq = jQuery;
 var currentColor_enabled = 1;
+var currentColor_H_enabled = 1;
+var currentColor_S_enabled = 1;
+var currentColor_L_enabled = 1;
 var colorBGSlider_enabled = 1;
 
 var currentColor_h = 200;
@@ -52,7 +55,7 @@ function findSwipeDirection(x, y, z) {
 // Use Gesture to change currentColor value
 function updateCurrentColor(selector, x, y, z) {
 	// adjust hue
-	if (currentColor_h >= 0 && currentColor_h <= 255) {
+	if (currentColor_H_enabled === 1 && currentColor_h >= 0 && currentColor_h <= 255) {
 		currentColor_h = Math.round(currentColor_h+x);
 		
 		if (currentColor_h < 0) {
@@ -63,7 +66,7 @@ function updateCurrentColor(selector, x, y, z) {
 		}
 	}
 	// adjust saturation
-	if (currentColor_s >= 0 && currentColor_s <= 100) {
+	if (currentColor_S_enabled === 1 && currentColor_s >= 0 && currentColor_s <= 100) {
 		currentColor_s = Math.round(currentColor_s+y);
 		
 		if (currentColor_s < 0) {
@@ -74,7 +77,7 @@ function updateCurrentColor(selector, x, y, z) {
 		}
 	}
 	// adjust lightness
-	if (currentColor_l >= 0 && currentColor_l <= 100) {
+	if (currentColor_L_enabled === 1 && currentColor_l >= 0 && currentColor_l <= 100) {
 		currentColor_l = Math.round(currentColor_l+z);
 		
 		if (currentColor_l < 0) {
@@ -125,23 +128,33 @@ function updateColorBGColor() {
 	.removeClass('slide_anim_left')
 	.removeClass('slide_anim_right');
 	
-	// clone then remove content
+	// clone then remove content – via http://css-tricks.com
 	var el     = jq('#color_bg_slider'),  
       newone = el.clone(true);
 			el.before(newone);
   jq("#color_bg_slider:last").remove();
   
+  // match colors of slider and static elements
 	jq('#color_bg_slider').css('background-color', jq('#color_bg_static').css('background-color'));
 }
 
 
 function setupUserInteractions() {
-	// show features enabled on start
+	// display features and subfeatures enabled on start
 	if (currentColor_enabled === 1) {
 		jq('#toggle_current_color').addClass('feature_enabled');
 	}
 	if (colorBGSlider_enabled === 1) {
 		jq('#toggle_color_bg_slider').addClass('feature_enabled');
+	}
+	if (currentColor_H_enabled === 1) {
+		jq('#toggle_current_color_H').addClass('feature_sub_enabled');
+	}
+	if (currentColor_S_enabled === 1) {
+		jq('#toggle_current_color_S').addClass('feature_sub_enabled');
+	}
+	if (currentColor_L_enabled === 1) {
+		jq('#toggle_current_color_L').addClass('feature_sub_enabled');
 	}
 	
 	// toggle features
@@ -168,7 +181,49 @@ function setupUserInteractions() {
 				}
 				break;
 			case 'toggle_current_hue':
+				// coming soon!
 				break;
+		}
+		
+		return false;
+	});
+	
+	// toggle sub-features
+	jq('.toggle_feature_sub').click(function () {
+		var current_id = jq(this).attr('id');
+		
+		if (currentColor_enabled === 1) {
+			switch(current_id) {
+				case 'toggle_current_color_H':
+					if (currentColor_H_enabled === 0) {
+						currentColor_H_enabled = 1;
+						jq(this).addClass('feature_sub_enabled');
+					} else {
+						currentColor_H_enabled = 0;
+						jq(this).removeClass('feature_sub_enabled');
+					}
+					break;
+				case 'toggle_current_color_S':
+					if (currentColor_S_enabled === 0) {
+						currentColor_S_enabled = 1;
+						jq(this).addClass('feature_sub_enabled');
+					} else {
+						currentColor_S_enabled = 0;
+						jq(this).removeClass('feature_sub_enabled');
+					}
+					break;
+				case 'toggle_current_color_L':
+					if (currentColor_L_enabled === 0) {
+						currentColor_L_enabled = 1;
+						jq(this).addClass('feature_sub_enabled');
+					} else {
+						currentColor_L_enabled = 0;
+						jq(this).removeClass('feature_sub_enabled');
+					}
+					break;
+			}
+		
+		output_log(current_id);
 		}
 		
 		return false;
